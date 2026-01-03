@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@source '../../node_modules/layerchart/dist';
+/* Set up theme colors */
+@import '@layerstack/tailwind/core.css';
+
+/* Then choose one of the following: */
+
+/* 1. Basic light/dark theme */
+/* @import '@layerstack/tailwind/themes/basic.css'; */
+
+/* 2. All Daisy UI themes ported to LayerStack */
+/* @import '@layerstack/tailwind/themes/daisy.css'; */
+
+/* 3. All Skeleton themes ported to LayerStack */
+/* @import '@layerstack/tailwind/themes/skeleton.css'; */
+
+/* 4. All Daisy UI and Skeleton themes ported to LayerStack (used by docs) */
+/* @import '@layerstack/tailwind/themes/all.css'; */
+
