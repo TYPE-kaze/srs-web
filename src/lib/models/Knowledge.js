@@ -1,6 +1,6 @@
 import db from "$lib/db.js";
 import fsrs, { getRetrievability, grade as gradeAndGetNewMemState } from "$lib/fsrs.svelte.js";
-function fromIndexDBtoInstance(k) {
+export function fromIndexDBtoInstance(k) {
 	const due = Number.isFinite(k.due) ? new Date(k.due) : null;
 	const lastReviewDate = Number.isFinite(k.lastReviewDate) ? new Date(k.lastReviewDate) : null;
 	const firstReviewDate = Number.isFinite(k.firstReviewDate) ? new Date(k.firstReviewDate) : null;

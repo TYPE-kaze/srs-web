@@ -304,7 +304,6 @@
 
 	main = (async function () {
 		tests = await SimpleTest.getAll();
-		const due = await SimpleTest.getAllDue();
 	})();
 
 	let modal = $state();

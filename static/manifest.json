@@ -1,0 +1,7 @@
+{
+  "name": "SRS Web",
+  "short_name": "SRS Web",
+  "description": "SRS in the web",
+  "start_url": "/",
+  "display": "standalone"
+}

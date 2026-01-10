@@ -23,7 +23,7 @@
 	let status = $state("seeding from Anki");
 
 	async function main() {
-		const num = 150;
+		const num = 100;
 		const tests = [];
 		const cardIDs = await ankiConnect("findCards", { query: 'deck:Deck::Learned -"note:Default Image Occlusion"' });
 
@@ -118,8 +118,8 @@
 				interval = Math.max(newMemState.interval | 0, 1);
 			}
 			k.interval = interval;
-			/* k.due = new Date(k.lastReviewDate.getTime() + k.interval * 24 * 60 * 60 * 1000); */
-			k.due = new Date();
+			k.due = new Date(k.lastReviewDate.getTime() + k.interval * 24 * 60 * 60 * 1000);
+			/* k.due = new Date(); */
 
 			const t = new SimpleTest(null, q, a, k, null, imageBlobs, new Date(firstReviewDate.getTime()));
 			tests.push(t);

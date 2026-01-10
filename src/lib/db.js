@@ -7,4 +7,5 @@ db.version(1).stores({
 	books: "name",
 	setting: "name",
 });
+
 export default db;

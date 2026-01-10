@@ -4,4 +4,4 @@ import { defineConfig } from "vite";
 import fs from "fs";
 import path from "path";
 
-export default defineConfig({ plugins: [tailwindcss(), sveltekit()] });
+export default defineConfig({ plugins: [tailwindcss(), sveltekit()], worker: { format: "es" } });

@@ -1,13 +1,19 @@
 import db from "$lib/db.js";
 import Knowledge from "$lib/models/Knowledge.js";
+// if Knowledge instance has not been created
 async function fromIndexDBtoInstance(t, k) {
 	if (!(k instanceof Knowledge)) {
 		k = await Knowledge.getOne(t.knowledgeID);
 	}
-	const addedDate = Number.isFinite(t.addedDate) ? new Date(t.addedDate) : null;
+	return fromIndexDBToInstanceSync(t, k);
+}
 
+// if Knowledge instance has been created
+export function fromIndexDBToInstanceSync(t, k) {
+	const addedDate = Number.isFinite(t.addedDate) ? new Date(t.addedDate) : null;
 	return new SimpleTest(t.id, t.question, t.answer, k, t.audios, t.images, addedDate);
 }
+
 export default class SimpleTest {
 	constructor(id, question, answer, knowledge, audios, images, addedDate) {
 		this.id = id;
