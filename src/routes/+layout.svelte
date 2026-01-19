@@ -7,14 +7,17 @@
 	import favicon from "$lib/assets/favicon.svg";
 	import "bootstrap/dist/css/bootstrap.min.css";
 	import "bootstrap-icons/font/bootstrap-icons.css";
-	if (browser) {
-		import("bootstrap/dist/js/bootstrap.bundle.min.js");
-	}
-
 	import { page } from "$app/state";
 	import { setContext } from "svelte";
 	import { Toaster } from "svelte-sonner";
 	import NavBar from "./NavBar.svelte";
+
+	if (browser) {
+		/* let res = import("bootstrap/dist/js/bootstrap.bundle.min.js"); */
+		/* BUG FIX: JS seem to differentate imported module by the string used */
+		/* the above will cause bootrap to be imported twice. leading to stupid behaviour */
+		let res = import("bootstrap");
+	}
 
 	let { children } = $props();
 	let nav = $state({ browseSearchTerm: null });

@@ -36,6 +36,18 @@
 		questionNode?.setText(text);
 	}
 
+	export function appendQuestionText(text) {
+		questionNode?.appendText(text);
+	}
+
+	export function setAnswerText(text) {
+		answerNode?.setText(text);
+	}
+
+	export function appendAnswerText(text) {
+		answerNode?.appendText(text);
+	}
+
 	export function setQuestionImage(url) {
 		questionNode?.setImage(url);
 	}
@@ -235,7 +247,7 @@
 <div {onkeydowncapture} {onpaste} class="container mt-3">
 	<form action="">
 		<div class="toolbar mb-2" role="toolbar" aria-label="Toolbar with button groups">
-			<div class="btn-group me-2" role="group" aria-label="First group">
+			<div class="btn-group text-format me-2" role="group" aria-label="First group">
 				<button
 					type="button"
 					onclick={boldSelection}
@@ -256,6 +268,18 @@
 					class={[formStates.underline && "active", "underscore btn btn-sm btn-outline-secondary"]}
 				>
 					U
+				</button>
+			</div>
+			<div class="btn-group me-2" role="group" aria-label="First group">
+				<button
+					type="button"
+					onclick={() => {
+						questionNode?.setText("");
+						answerNode?.setText("");
+					}}
+					class="btn btn-sm btn-outline-secondary"
+				>
+					Đặt lại
 				</button>
 			</div>
 		</div>
@@ -303,8 +327,13 @@
 		padding-bottom: 10px;
 		border-bottom: 2px solid grey;
 	}
+
 	div.toolbar button {
 		color: black;
+		height: 2em;
+	}
+
+	div.toolbar div.text-format button {
 		width: 2em;
 		height: 2em;
 		aspect-ratio: 1/1;

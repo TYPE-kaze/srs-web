@@ -56,6 +56,10 @@
 		quill?.insertEmbed(getLength(), "image", url);
 	}
 
+	export function appendText(text) {
+		quill?.insertText(getLength(), text);
+	}
+
 	async function setupQuill(element) {
 		const { default: Quill } = await import("quill");
 		quill = new Quill(element, {

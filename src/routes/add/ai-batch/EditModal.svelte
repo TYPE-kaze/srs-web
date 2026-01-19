@@ -1,5 +1,5 @@
 <script>
-	const { id, selectedText, children } = $props();
+	const { id, children, title } = $props();
 
 	let modal = $state();
 	let isModalOpen = $state(false);
@@ -29,7 +29,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header py-3">
-				<h5 class="modal-title">Thêm kiến thức</h5>
+				<h5 class="modal-title">{title}</h5>
 				<button tabindex="-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body pt-0">

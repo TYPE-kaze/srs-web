@@ -5,8 +5,8 @@
 	const zoom = useZoom(() => documentId);
 	let dropdown;
 	async function setup(el) {
-		const bootstrap = await import("bootstrap");
-		dropdown = new bootstrap.Dropdown(el);
+		/* const bootstrap = await import("bootstrap"); */
+		/* dropdown = new bootstrap.Dropdown(el); */
 	}
 </script>
 
@@ -19,7 +19,6 @@
 
 		<div class="dropup-center btn-group dropup">
 			<button
-				onclick={() => dropdown?.toggle()}
 				{@attach setup}
 				type="button"
 				class="btn dropdown-toggle btn-sm btn-outline-dark flex items-center gap-1 rounded px-2"

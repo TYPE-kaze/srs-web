@@ -58,8 +58,8 @@
 
 	let answerDropdown;
 	async function setup(el) {
-		const bootstrap = await import("bootstrap");
-		answerDropdown = new bootstrap.Dropdown(el);
+		/* const bootstrap = await import("bootstrap"); */
+		/* answerDropdown = new bootstrap.Dropdown(el); */
 	}
 </script>
 
@@ -83,12 +83,7 @@
 			</div>
 			<div class="btn-group" role="group">
 				<div class="btn-group" role="group">
-					<button
-						onclick={() => answerDropdown?.toggle()}
-						{@attach setup}
-						class="btn btn-outline-primary btn-sm dropdown-toggle"
-						data-bs-toggle="dropdown"
-					>
+					<button {@attach setup} class="btn btn-outline-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
 						<i class="bi bi-check-lg"></i>
 						<span style:display="none">check answer</span>
 					</button>

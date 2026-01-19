@@ -4,7 +4,15 @@ import { browser } from "$app/environment";
 import { fromIndexDBToInstanceSync as fromDB2TInstance } from "$lib/models/SimpleTest";
 import { fromIndexDBtoInstance as fromDB2KInstance } from "$lib/models/Knowledge";
 
-const db_states = $state({ tests: [], knowledges: [] });
+function formatDate(date) {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+
+	return `${year}-${month}-${day}`;
+}
+
+export const db_states = $state({ tests: [], knowledges: [] });
 const tests_db = $derived(db_states.tests);
 const knowledges_db = $derived(db_states.knowledges);
 const knowledges_table_db = $derived.by(() => {
@@ -14,6 +22,18 @@ const knowledges_table_db = $derived.by(() => {
 	}
 	return res;
 });
+
+const k_by_date = $derived.by(() => {
+	let res = {};
+	for (const key in knowledges_table_db) {
+		const item = knowledges_table_db[key];
+		const dateStr = formatDate(item.due);
+		if (Array.isArray(res[dateStr])) res[dateStr].push(item);
+		else res[dateStr] = [item];
+	}
+	return res;
+});
+
 const tests = $derived.by(() => {
 	const res = [];
 	for (const t of tests_db) {
@@ -33,7 +53,7 @@ if (browser) {
 		const res = await db.simple_tests.toArray();
 		if (isTestFirstTime) {
 			db_states.tests = res;
-			isFirstTime = false;
+			isTestFirstTime = false;
 		}
 		return res;
 	});
@@ -46,7 +66,7 @@ if (browser) {
 		const res = await db.knowledge.toArray();
 		if (isKnowledgeFirstTime) {
 			db_states.knowledges = res;
-			isFirstTime = false;
+			isKnowledgeFirstTime = false;
 		}
 		return res;
 	});
@@ -60,4 +80,16 @@ if (browser) {
 // This return value and not a state
 export function getAllTestReactive() {
 	return tests;
+}
+
+export function getDBStates() {
+	return db_states;
+}
+
+export function getKnowledgeByDate() {
+	return k_by_date;
+}
+
+export function getReviewCountOfDate(date) {
+	return k_by_date[formatDate(date)] ?? 0;
 }

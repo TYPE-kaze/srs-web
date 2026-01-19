@@ -51,20 +51,26 @@
 				{#each w as d}
 					{#if d}
 						<td
+							class="day"
 							style={`width:1em;height:1em;background:${getColor(colors, max, d.value)}`}
 							data-date={d.date}
 							data-value={d.value}
 							data-bs-title={`Ngày ${d.date.split("-")[2]}: ${d.value} ôn tập`}
 							data-bs-toggle="tooltip"
 							{onclick}
-							{onmouseout}
-							{onmouseover}
-						/>
+						></td>
 					{:else}
-						<td />
+						<td></td>
 					{/if}
 				{/each}
 			</tr>
 		{/each}
 	</tbody>
 </table>
+
+<style>
+	td.day {
+		border-width: 1px;
+		border-color: grey;
+	}
+</style>

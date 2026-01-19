@@ -35,12 +35,26 @@
 	let modal = $state();
 	let qaform;
 
+	function appendQuestionText(text) {
+		qaform.appendQuestionText(text);
+	}
+
+	function appendAnswerText(text) {
+		qaform.appendAnswerText(text);
+	}
+
 	function setQuestionText(text) {
 		qaform.setQuestionText(text);
 	}
+
+	function setAnswerText(text) {
+		qaform.setAnswerText(text);
+	}
+
 	function setQuestionImage(url) {
 		qaform.setQuestionImage(url);
 	}
+
 	function updateSelectedText(text) {
 		selectedText = text;
 	}
@@ -105,7 +119,13 @@
 </script>
 
 {#if pdfEngine.isLoading || !pdfEngine.engine || !isPluginInit}
-	<div class="loading-pane">Loading PDF Engine...</div>
+	<div class="loading-pane">
+		<div class="text-center">
+			<div class="spinner-border mt-5" style="width: 5rem; height: 5rem;" role="status">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+		</div>
+	</div>
 {:else}
 	<div class="reader d-flex flex-column">
 		<EmbedPDF engine={pdfEngine.engine} {plugins}>
@@ -117,6 +137,9 @@
 							{#if documentContent.isLoaded}
 								<Content
 									{setQuestionText}
+									{setAnswerText}
+									{appendQuestionText}
+									{appendAnswerText}
 									{updateSelectedText}
 									{selectedText}
 									showModal={() => modal?.show()}

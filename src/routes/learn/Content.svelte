@@ -17,7 +17,18 @@
 
 	import { getCurrentPage, setCurrentPage } from "$lib/book.svelte.js";
 
-	const { setQuestionText, updateSelectedText, selectedText, showModal, documentId, bookStates, isSideBar } = $props();
+	const {
+		setQuestionText,
+		setAnswerText,
+		appendAnswerText,
+		appendQuestionText,
+		updateSelectedText,
+		selectedText,
+		showModal,
+		documentId,
+		bookStates,
+		isSideBar,
+	} = $props();
 	let activeSideBarPage = $state(0);
 	const selectionCapability = useSelectionCapability();
 	const selection = $derived(selectionCapability.provides?.forDocument(documentId));
@@ -71,12 +82,34 @@
 		selection?.clear();
 	}
 
-	function openAddCardModel() {
+	function setQuestionTextAndOpenModel() {
 		const text = selectedText?.replace(/[\n\s\r]+/g, " ");
 		setQuestionText(text);
 		selection?.clear();
 		showModal();
 	}
+
+	function setAnswerTextAndOpenModel() {
+		const text = selectedText?.replace(/[\n\s\r]+/g, " ");
+		setAnswerText(text);
+		selection?.clear();
+		showModal();
+	}
+
+	function appendQuestionTextAndOpenModel() {
+		const text = "\n" + selectedText?.replace(/[\n\s\r]+/g, " ");
+		appendQuestionText(text);
+		selection?.clear();
+		showModal();
+	}
+
+	function appendAnswerTextAndOpenModel() {
+		const text = "\n" + selectedText?.replace(/[\n\s\r]+/g, " ");
+		appendAnswerText(text);
+		selection?.clear();
+		showModal();
+	}
+
 	const annotationCapability = useAnnotationCapability();
 	const annotationApi = $derived(annotationCapability.provides?.forDocument(documentId));
 	const handleDeleteFromMenu = (pageIndex, id) => {
@@ -97,16 +130,36 @@
 							style:top={placement.suggestTop ? "-48px" : `${rect.size.height + 8}px`}
 							style:pointer-events="auto"
 							style:cursor="default"
-							style:min-width="170px"
+							style:min-width="200px"
 						>
 							<div style:font-size="0.9em" class="context-menu list-group">
 								<button
 									type="button"
 									class="context-menu text-dark list-group-item-action list-group-item text-start"
-									onclick={openAddCardModel}
+									onclick={setQuestionTextAndOpenModel}
 								>
-									<i class="bi bi-fonts"></i>
-									Thêm kiến thức
+									Thêm đè lên Câu Hỏi
+								</button>
+								<button
+									type="button"
+									class="context-menu text-dark list-group-item-action list-group-item text-start"
+									onclick={setAnswerTextAndOpenModel}
+								>
+									Thêm đè lên Đáp Án
+								</button>
+								<button
+									type="button"
+									class="context-menu text-dark list-group-item-action list-group-item text-start"
+									onclick={appendQuestionTextAndOpenModel}
+								>
+									Thêm vào cuối Câu Hỏi
+								</button>
+								<button
+									type="button"
+									class="context-menu text-dark list-group-item-action list-group-item text-start"
+									onclick={appendAnswerTextAndOpenModel}
+								>
+									Thêm vào cuối Đáp Án
 								</button>
 								<button
 									type="button"

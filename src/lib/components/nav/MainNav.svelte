@@ -1,4 +1,4 @@
-<ul class="navbar-nav mx-auto center position-absolute start-50 translate-middle-x">
+<ul class="navbar-nav center position-absolute translate-middle-x start-50 mx-auto">
 	<li class="nav-item">
 		<a class="nav-link active" href="/">GD Chính</a>
 	</li>

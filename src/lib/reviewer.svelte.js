@@ -1,8 +1,33 @@
 import SimpleTest from "$lib/models/SimpleTest";
+import { fromIndexDBtoInstance as fromDB2KInstance } from "$lib/models/Knowledge";
 import Knowledge from "$lib/models/Knowledge";
 import { getCurrentSettings } from "$lib/settings.svelte";
+import { db_states } from "$lib/reactive.db.svelte"; // let settings = currentSetting;
 let settings = getCurrentSettings();
-// let settings = currentSetting;
+let k_by_date;
+
+function formatDate(date) {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+
+	return `${year}-${month}-${day}`;
+}
+
+function populateKByDate() {
+	const date = new Date();
+	k_by_date = {};
+	for (const k of db_states.knowledges) {
+		date.setTime(k.due);
+		const dateStr = formatDate(date);
+		if (Array.isArray(k_by_date[dateStr])) k_by_date[dateStr].push(k);
+		else k_by_date[dateStr] = [k];
+	}
+}
+
+function getReviewCountOfDate(date) {
+	return k_by_date[formatDate(date)];
+}
 
 // Fisher–Yates shuffle
 function shuffle(array) {
@@ -44,8 +69,8 @@ export class Reviewer {
 	#cur = $derived(this.sortedQueue.at(0));
 
 	#current = $derived.by(() => {
-		const testsOfOneK = this.#cur.tests;
-		return testsOfOneK[0];
+		const testsOfOneK = this.#cur?.tests;
+		return testsOfOneK && testsOfOneK[0];
 	});
 
 	constructor(tests) {
@@ -74,6 +99,7 @@ export class Reviewer {
 
 	static async createNewReviewer() {
 		const tests = await SimpleTest.getAllDue();
+		populateKByDate();
 		return new Reviewer(tests);
 	}
 
@@ -86,16 +112,16 @@ export class Reviewer {
 		this.nextReview();
 	};
 
-	async gradeGood() {
+	gradeGood() {
 		// console.log("Pre grade: ", $state.snapshot(this.current.knowledge));
-		await this.current.knowledge.updateOnGrade("good");
+		this.current.knowledge.updateOnGrade("good", getReviewCountOfDate);
 		// console.log("Post grade: ", $state.snapshot(this.current.knowledge));
 		this.nextReview();
 	}
 
-	async gradeForget() {
+	gradeForget() {
 		// console.log("Pre grade: ", $state.snapshot(this.current.knowledge));
-		await this.current.knowledge.updateOnGrade("again");
+		this.current.knowledge.updateOnGrade("again", getReviewCountOfDate);
 		// console.log("Post grade: ", $state.snapshot(this.current.knowledge));
 		this.nextReview();
 	}

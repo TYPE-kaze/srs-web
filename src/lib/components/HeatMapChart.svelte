@@ -41,7 +41,7 @@
 	});
 </script>
 
-<div class="heatmap container-fluid bg-opacity-10 border-secondary-subtle bg-body-tertiary rounded border pb-3 shadow-sm">
+<div class="heatmap container-fluid bg-opacity-10 border-secondary-subtle bg-body-tertiary rounded pb-3 shadow-sm border">
 	{@render header?.()}
 	<div class="d-flex">
 		<div class="mx-auto">
@@ -64,8 +64,5 @@
 	}
 	button {
 		border: none;
-	}
-	:global(td[data-date]:not([data-date=""])) {
-		border-width: 1px;
 	}
 </style>
