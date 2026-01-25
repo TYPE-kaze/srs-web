@@ -33,5 +33,4 @@ export function getRetrievabilityByDelta(s, delta) {
 export function grade(s, d, delta, grade) {
 	return fsrs.nextStates(s, d, dr, delta)[grade];
 }
-
 export default fsrs;

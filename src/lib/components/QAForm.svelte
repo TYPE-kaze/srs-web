@@ -5,6 +5,7 @@
 	import { browser } from "$app/environment";
 	import { toast } from "svelte-sonner";
 	import EditableField from "$lib/components/EditableField.svelte";
+	import QAFormEditButtonGroup from "$lib/components/QAFormEditButtonGroup.svelte";
 	const { test, runOnAdd, runOnEdit } = $props();
 	const isEditMode = $derived(!!test);
 	let filesNode;
@@ -97,16 +98,34 @@
 		observer.observe(el, { childList: true });
 	}
 
+	function isQuillSelecting() {
+		const range = formStates.currentQuill?.getSelection();
+		let isSelection = false;
+		if (range && range.length !== 0) {
+			isSelection = true;
+		}
+		return isSelection;
+	}
+
 	function boldSelection() {
 		formStates.currentQuill?.format("bold", !formStates.bold);
+		if (!isQuillSelecting()) {
+			formStates.bold = !formStates.bold;
+		}
 	}
 
 	function italicSelection() {
 		formStates.currentQuill?.format("italic", !formStates.italic);
+		if (!isQuillSelecting()) {
+			formStates.italic = !formStates.italic;
+		}
 	}
 
 	function underlineSelection() {
 		formStates.currentQuill?.format("underline", !formStates.underline);
+		if (!isQuillSelecting()) {
+			formStates.underline = !formStates.underline;
+		}
 	}
 
 	function onkeydowncapture(e) {
@@ -247,41 +266,14 @@
 <div {onkeydowncapture} {onpaste} class="container mt-3">
 	<form action="">
 		<div class="toolbar mb-2" role="toolbar" aria-label="Toolbar with button groups">
-			<div class="btn-group text-format me-2" role="group" aria-label="First group">
-				<button
-					type="button"
-					onclick={boldSelection}
-					class={[formStates.bold && "active", "bold btn btn-sm btn-outline-secondary"]}
-				>
-					B
-				</button>
-				<button
-					type="button"
-					onclick={italicSelection}
-					class={[formStates.italic && "active", "btn btn-sm btn-outline-secondary italic"]}
-				>
-					I
-				</button>
-				<button
-					type="button"
-					onclick={underlineSelection}
-					class={[formStates.underline && "active", "underscore btn btn-sm btn-outline-secondary"]}
-				>
-					U
-				</button>
-			</div>
-			<div class="btn-group me-2" role="group" aria-label="First group">
-				<button
-					type="button"
-					onclick={() => {
-						questionNode?.setText("");
-						answerNode?.setText("");
-					}}
-					class="btn btn-sm btn-outline-secondary"
-				>
-					Đặt lại
-				</button>
-			</div>
+			<QAFormEditButtonGroup
+				{boldSelection}
+				{formStates}
+				{italicSelection}
+				{underlineSelection}
+				{questionNode}
+				{answerNode}
+			/>
 		</div>
 
 		{#await test && browser && init_q ? init_q : undefined then q}
@@ -326,32 +318,5 @@
 		padding: 0;
 		padding-bottom: 10px;
 		border-bottom: 2px solid grey;
-	}
-
-	div.toolbar button {
-		color: black;
-		height: 2em;
-	}
-
-	div.toolbar div.text-format button {
-		width: 2em;
-		height: 2em;
-		aspect-ratio: 1/1;
-	}
-
-	div.toolbar button.active {
-		color: white;
-	}
-
-	button.bold {
-		font-weight: bold;
-	}
-
-	button.italic {
-		font-style: italic;
-	}
-
-	button.underscore {
-		text-decoration: underline;
 	}
 </style>
