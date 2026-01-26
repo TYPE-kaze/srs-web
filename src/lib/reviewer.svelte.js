@@ -45,6 +45,16 @@ export class Reviewer {
 	sortedQueue = $derived.by(() => {
 		let sorter;
 		let ret = this.#queue.map((tests, index) => ({ tests, index, knowledge: tests[0].knowledge }));
+		let untilSuccessArray = [];
+		ret = ret.filter((item) => {
+			if (item.knowledge.reviewUntilSuccess) {
+				untilSuccessArray.push(item);
+				return false;
+			} else {
+				return true;
+			}
+		});
+
 		switch (settings.reviewOrder) {
 			case "addedDateDesc":
 				sorter = ({ tests: a }, { tests: b }) => b[0].knowledge.firstReviewDate - a[0].knowledge.firstReviewDate;
@@ -63,6 +73,8 @@ export class Reviewer {
 				ret = shuffle(ret);
 				break;
 		}
+
+		ret = ret.concat(untilSuccessArray);
 		return ret;
 	});
 
@@ -104,7 +116,7 @@ export class Reviewer {
 	}
 
 	nextReview() {
-		this.queue.splice(this.#cur.index, 1);
+		return this.queue.splice(this.#cur.index, 1);
 	}
 
 	deleteCurrent = () => {
@@ -114,6 +126,7 @@ export class Reviewer {
 
 	gradeGood() {
 		// console.log("Pre grade: ", $state.snapshot(this.current.knowledge));
+		this.current.knowledge.reviewUntilSuccess &&= false;
 		this.current.knowledge.updateOnGrade("good", getReviewCountOfDate);
 		// console.log("Post grade: ", $state.snapshot(this.current.knowledge));
 		this.nextReview();
@@ -121,8 +134,17 @@ export class Reviewer {
 
 	gradeForget() {
 		// console.log("Pre grade: ", $state.snapshot(this.current.knowledge));
-		this.current.knowledge.updateOnGrade("again", getReviewCountOfDate);
+		const k = this.current.knowledge;
+		if (settings.reviewUntilSuccess) {
+			this.current.knowledge.reviewUntilSuccess = true;
+			k.updateOnGrade("again", getReviewCountOfDate, new Date());
+			const arr = this.nextReview();
+			this.#queue.push(arr[0]);
+		} else {
+			this.current.knowledge.reviewUntilSuccess = false;
+			k.updateOnGrade("again", getReviewCountOfDate);
+			this.nextReview();
+		}
 		// console.log("Post grade: ", $state.snapshot(this.current.knowledge));
-		this.nextReview();
 	}
 }

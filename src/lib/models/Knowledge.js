@@ -5,7 +5,17 @@ export function fromIndexDBtoInstance(k) {
 	const due = Number.isFinite(k.due) ? new Date(k.due) : null;
 	const lastReviewDate = Number.isFinite(k.lastReviewDate) ? new Date(k.lastReviewDate) : null;
 	const firstReviewDate = Number.isFinite(k.firstReviewDate) ? new Date(k.firstReviewDate) : null;
-	return new Knowledge(k.id, k.stability, k.difficulty, k.interval, due, lastReviewDate, firstReviewDate, k.reviewHistory);
+	return new Knowledge(
+		k.id,
+		k.stability,
+		k.difficulty,
+		k.interval,
+		due,
+		lastReviewDate,
+		firstReviewDate,
+		k.reviewHistory,
+		k.reviewUntilSuccess,
+	);
 }
 
 function getFuzzRange(interval, elapsedDays = 0) {
@@ -144,7 +154,7 @@ function applyLoadBalance(calculatedInterval, getReviewCountOfDate, options = {}
 
 export default class Knowledge {
 	// A plain `new Knowledge()` assume first review to be good
-	constructor(id, stability, difficulty, interval, due, lastReviewDate, firstReviewDate, reviewHistory) {
+	constructor(id, stability, difficulty, interval, due, lastReviewDate, firstReviewDate, reviewHistory, reviewUntilSuccess) {
 		this.id = id;
 		this.stability = stability;
 		this.difficulty = difficulty;
@@ -153,6 +163,7 @@ export default class Knowledge {
 		this.lastReviewDate = lastReviewDate;
 		this.firstReviewDate = firstReviewDate;
 		this.reviewHistory = reviewHistory;
+		this.reviewUntilSuccess = reviewUntilSuccess;
 
 		if (!reviewHistory) {
 			this.reviewHistory = [];
@@ -183,13 +194,13 @@ export default class Knowledge {
 		return getRetrievability(this.stability, this.lastReviewDate.getTime(), Date.now());
 	}
 
-	updateOnGrade(grade, func) {
+	async updateOnGrade(grade, func, setDue = null) {
 		let delta = 0;
 		let date = new Date();
 		if (this.lastReviewDate) {
 			delta = (date - this.lastReviewDate) / (1000 * 60 * 60 * 24);
 		}
-		// const s = fsrs.nextStates(this.stability, this.difficulty, d_r, delta)[grade];
+
 		const s = gradeAndGetNewMemState(this.stability, this.difficulty, delta, grade);
 
 		this.trackReviewNow(grade);
@@ -197,15 +208,19 @@ export default class Knowledge {
 			const b_inv = applyLoadBalance(s.interval, func, { elapsedDays: delta, today: new Date() });
 			this.stability = s.memory.stability;
 			this.difficulty = s.memory.difficulty;
-			this.interval = b_inv || Math.max(s.interval | 0, 1);
+			this.interval = s.interval;
 			this.lastReviewDate = date;
-			const due = new Date();
-			due.setDate(date.getDate() + this.interval);
+			let due = new Date();
+			if (setDue) {
+				due = setDue;
+			} else {
+				due.setDate(date.getDate() + Math.max(Math.round(b_inv || this.interval), 1));
+			}
 			this.due = due;
 		} else {
 			throw new Error("grade is not a valid grade");
 		}
-		this.save();
+		await this.save();
 		return this;
 	}
 
@@ -236,6 +251,7 @@ export default class Knowledge {
 				lastReviewDate: this.lastReviewDate.getTime(),
 				firstReviewDate: this.firstReviewDate.getTime(),
 				reviewHistory: this.reviewHistory,
+				reviewUntilSuccess: this.reviewUntilSuccess,
 			});
 		} else {
 			// add
@@ -247,6 +263,7 @@ export default class Knowledge {
 				lastReviewDate: this.lastReviewDate.getTime(),
 				firstReviewDate: this.firstReviewDate.getTime(),
 				reviewHistory: this.reviewHistory,
+				reviewUntilSuccess: this.reviewUntilSuccess,
 			});
 		}
 		return this;

@@ -24,6 +24,7 @@
 	let desiredRetention = $derived(currentSettings.desiredRetention);
 	let maxInterval = $derived(currentSettings.maxInterval);
 	let easyDays = $derived(currentSettings.easyDays ?? {});
+	let reviewUntilSuccess = $derived(currentSettings.reviewUntilSuccess ?? false);
 </script>
 
 <div class="container mt-3">
@@ -88,7 +89,7 @@
 				/>
 			</div>
 		</div>
-		<div class="row mb-3">
+		<div class="row mb-1">
 			<label for="reviewOrder" class="fw-bold col-form-label col-3 text-end">Thứ tự ôn tập:</label>
 			<div class="d-flex align-item-center col-3 ps-0">
 				<select
@@ -101,6 +102,19 @@
 						<option selected={i.id === currentSettings.reviewOrder} value={i.id}>{i.label}</option>
 					{/each}
 				</select>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<label for="reviewUntilSuccess" class="fw-bold col-form-label col-3 text-end">Ôn đến khi nhớ:</label>
+			<div class="form-switch form-check form-check-inline col-2 my-auto">
+				<input
+					class="form-check-input"
+					type="checkbox"
+					id="reviewUntilSuccess"
+					value=""
+					bind:checked={reviewUntilSuccess}
+					onchange={() => setSetting("reviewUntilSuccess", reviewUntilSuccess)}
+				/>
 			</div>
 		</div>
 		<h2 class="border-bottom pb-2">Ngày nghỉ</h2>

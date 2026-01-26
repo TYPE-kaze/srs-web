@@ -17,8 +17,8 @@
 				break;
 		}
 
-		let newStability = prevStability.toFixed(0);
-		let newDifficulty = prevDifficulty.toFixed(1);
+		let newStability = prevStability.toFixed(2);
+		let newDifficulty = prevDifficulty.toFixed(2);
 		return { date, grade, newStability, newDifficulty };
 	}
 	const renderData = $derived.by(() => {

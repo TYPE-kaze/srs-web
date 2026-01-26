@@ -1,5 +1,6 @@
 <script>
-	const { boldSelection, formStates, italicSelection, underlineSelection, questionNode, answerNode } = $props();
+	const { boldSelection, formStates, italicSelection, underlineSelection, questionNode, answerNode, reviewNowHandler } =
+		$props();
 </script>
 
 <div class="btn-group text-format me-2" role="group" aria-label="First group">
@@ -22,7 +23,17 @@
 	</button>
 </div>
 
-<div class="btn-group me-2" role="group" aria-label="First group">
+<div class="btn-group me-2" role="group">
+	<button
+		type="button"
+		onclick={reviewNowHandler}
+		class={[formStates.reviewNow && "active", "btn btn-sm btn-outline-secondary"]}
+	>
+		Ôn tập luôn
+	</button>
+</div>
+
+<div class="btn-group me-2" role="group">
 	<button
 		type="button"
 		onclick={() => {

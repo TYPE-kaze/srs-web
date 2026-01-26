@@ -6,6 +6,7 @@ const defaultSetting = {
 	reviewOrder: "random",
 	desiredRetention: 90,
 	maxInterval: 36500,
+	reviewUntilSuccess: false,
 	easyDays: {
 		0: 1.0, // Sunday
 		1: 1.0, // Monday
@@ -60,6 +61,7 @@ export async function setSetting(key, value) {
 			desiredRetention: currentSetting.desiredRetention,
 			maxInterval: currentSetting.maxInterval,
 			geminiKey: currentSetting.geminiKey,
+			reviewUntilSuccess: currentSetting.reviewUntilSuccess,
 			easyDays: {
 				0: currentSetting.easyDays[0],
 				1: currentSetting.easyDays[1],
@@ -94,4 +96,8 @@ export function getCurrentEasyDays() {
 
 export function getGemeniKey() {
 	return currentSetting.geminiKey;
+}
+
+export function getReviewUntilSuccess() {
+	return currentSetting.reviewUntilSuccess;
 }

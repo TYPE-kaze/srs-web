@@ -23,7 +23,7 @@
 	let status = $state("seeding from Anki");
 
 	async function main() {
-		const num = 1000;
+		const num = 100;
 		const tests = [];
 		const cardIDs = await ankiConnect("findCards", { query: 'deck:Deck::Learned -"note:Default Image Occlusion"' });
 

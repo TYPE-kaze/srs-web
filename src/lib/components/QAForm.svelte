@@ -19,6 +19,7 @@
 		underline: false,
 		currentQuill: null,
 		currentFieldID: null,
+		reviewNow: false,
 		audioNodes: {},
 		promiseForAudioFirstLoad: new Promise((resolve, _) => {
 			promiseForAudioFirstLoadResove = resolve;
@@ -243,6 +244,9 @@
 		} else {
 			// Adding new test is assuming learned
 			const k = new Knowledge();
+			if (formStates.reviewNow) {
+				k.due = new Date();
+			}
 			await k.save();
 			t = new SimpleTest(null, q, a, k, audioBlobToSave, imageBlobs, new Date());
 		}
@@ -261,6 +265,10 @@
 		const msg = test ? "Cập nhật thành công" : "Thêm thành công";
 		toast.success(msg);
 	}
+
+	function reviewNowHandler() {
+		formStates.reviewNow = !formStates.reviewNow;
+	}
 </script>
 
 <div {onkeydowncapture} {onpaste} class="container mt-3">
@@ -273,6 +281,7 @@
 				{underlineSelection}
 				{questionNode}
 				{answerNode}
+				{reviewNowHandler}
 			/>
 		</div>
 
