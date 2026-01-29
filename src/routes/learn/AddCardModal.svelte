@@ -1,5 +1,5 @@
 <script>
-	const { id, selectedText, children } = $props();
+	const { id, selectedText, children, loading } = $props();
 
 	let modal = $state();
 	let isModalOpen = $state(false);
@@ -29,7 +29,14 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header py-3">
-				<h5 class="modal-title">Thêm kiến thức</h5>
+				<h5 class="modal-title">
+					Thêm kiến thức
+					{#if loading}
+						<div class="spinner-border ms-1" role="status" style="width: 1em; height: 1em;">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					{/if}
+				</h5>
 				<button tabindex="-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body pt-0">

@@ -1,6 +1,17 @@
 <script>
-	const { boldSelection, formStates, italicSelection, underlineSelection, questionNode, answerNode, reviewNowHandler } =
-		$props();
+	const {
+		redoButtonHandler,
+		undoButtonHandler,
+		codeButtonHandler,
+		boldSelection,
+		formStates,
+		italicSelection,
+		underlineSelection,
+		questionNode,
+		answerNode,
+		reviewNowHandler,
+		clozeButtonHandler,
+	} = $props();
 </script>
 
 <div class="btn-group text-format me-2" role="group" aria-label="First group">
@@ -21,6 +32,28 @@
 	>
 		U
 	</button>
+</div>
+
+<div class="btn-group me-2" role="group">
+	<button type="button" onclick={codeButtonHandler} class={[formStates.code && "active", "btn btn-sm btn-outline-secondary"]}>
+		<i class="bi bi-code-slash"></i>
+		<span style:display="none">Code</span>
+	</button>
+</div>
+
+<div class="btn-group me-2" role="group">
+	<button type="button" onclick={undoButtonHandler} class="btn btn-sm btn-outline-secondary">
+		<i class="bi bi-arrow-counterclockwise"></i>
+		<span style:display="none">undo</span>
+	</button>
+	<button type="button" onclick={redoButtonHandler} class="btn btn-sm btn-outline-secondary">
+		<i class="bi bi-arrow-clockwise"></i>
+		<span style:display="none">redo</span>
+	</button>
+</div>
+
+<div class="btn-group me-2" role="group">
+	<button type="button" onclick={clozeButtonHandler} class="btn btn-sm btn-outline-secondary">Cloze</button>
 </div>
 
 <div class="btn-group me-2" role="group">

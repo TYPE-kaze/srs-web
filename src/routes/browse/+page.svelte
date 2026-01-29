@@ -135,6 +135,7 @@
 
 	let tests = $state([]);
 	let refreshLayout = $state();
+	// The sort function
 	let filteredCardData = $derived.by(() => {
 		let filteredTests = tests;
 		if (s.browseSearchTerm && s.browseSearchTerm.length !== 0) {

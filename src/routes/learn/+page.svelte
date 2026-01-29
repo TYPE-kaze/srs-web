@@ -29,6 +29,8 @@
 	import Toolbar from "./Toolbar.svelte";
 	import AddCardModal from "./AddCardModal.svelte";
 	import QAForm from "$lib/components/QAForm.svelte";
+	import { getLearnPartnerAI } from "$lib/genai.svelte";
+	import { toast } from "svelte-sonner";
 
 	let bookStates = getCurrentBook();
 	let selectedText = $state("");
@@ -111,9 +113,39 @@
 		}
 	}
 
+	let learnPartner;
+	let learnPartnerPromise;
+	let loading = $state(false);
+
+	async function getQA(pageNum, text) {
+		loading = true;
+		try {
+			let ret = pageNum + text;
+			if (!learnPartner) {
+				learnPartner = await learnPartnerPromise;
+			}
+			ret = await learnPartner.getQA(pageNum, text);
+			ret = ret.split("\n");
+			setQuestionText(ret[0]);
+			setAnswerText(ret[1]);
+		} catch (err) {
+			let msg = "Có lỗi xảy ra";
+			msg = err.message;
+			try {
+				if (JSON.parse(err.message)?.error?.code === 429) {
+					msg = "Bạn đã sử dụng quá giới hạn hiện tại của API";
+				}
+			} catch (e) {}
+			toast.error(msg);
+		} finally {
+			loading = false;
+		}
+	}
+
 	$effect(() => {
 		if (bookStates.currentBook && !isPluginInit) {
 			initPlugins(bookStates.currentBook.file);
+			learnPartnerPromise = getLearnPartnerAI(bookStates.currentBook.file);
 		}
 	});
 </script>
@@ -146,6 +178,7 @@
 									{isSideBar}
 									{documentId}
 									{bookStates}
+									generateQAFromAI={getQA}
 								/>
 							{/if}
 						{/snippet}
@@ -159,7 +192,7 @@
 	</div>
 {/if}
 
-<AddCardModal bind:this={modal} {selectedText}>
+<AddCardModal {loading} bind:this={modal} {selectedText}>
 	<QAForm bind:this={qaform} />
 </AddCardModal>
 

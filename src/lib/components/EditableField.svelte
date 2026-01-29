@@ -82,6 +82,7 @@
 				if (s.bold !== formStates.bold) formStates.bold = s.bold;
 				if (s.italic !== formStates.italic) formStates.italic = s.italic;
 				if (s.underline !== formStates.underline) formStates.underline = s.underline;
+				if (s.code !== formStates.code) formStates.code = s.code;
 			}
 		});
 

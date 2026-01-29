@@ -17,6 +17,8 @@
 		bold: false,
 		italic: false,
 		underline: false,
+		code: false,
+		codeBlock: false,
 		currentQuill: null,
 		currentFieldID: null,
 		reviewNow: false,
@@ -127,6 +129,21 @@
 		if (!isQuillSelecting()) {
 			formStates.underline = !formStates.underline;
 		}
+	}
+
+	function codeButtonHandler() {
+		formStates.currentQuill?.format("code", !formStates.code);
+		if (!isQuillSelecting()) {
+			formStates.code = !formStates.code;
+		}
+	}
+
+	function undoButtonHandler() {
+		formStates.currentQuill?.history.undo();
+	}
+
+	function redoButtonHandler() {
+		formStates.currentQuill?.history.redo();
 	}
 
 	function onkeydowncapture(e) {
@@ -269,6 +286,29 @@
 	function reviewNowHandler() {
 		formStates.reviewNow = !formStates.reviewNow;
 	}
+
+	function clozeButtonHandler() {
+		const quill = formStates.currentQuill;
+		if (!quill || formStates.currentFieldID !== "question") return;
+		const replacement = "[...]";
+		const range = quill.getSelection();
+
+		if (range && range.length > 0) {
+			const selectedText = quill.getText(range.index, range.length);
+			quill.deleteText(range.index, range.length);
+			/* quill.insertText(range.index, replacement); */
+			quill.insertText(
+				range.index,
+				replacement,
+				{
+					code: true,
+				},
+				"user",
+			);
+			quill.setSelection(range.index + replacement.length);
+			setAnswerText(selectedText);
+		}
+	}
 </script>
 
 <div {onkeydowncapture} {onpaste} class="container mt-3">
@@ -282,6 +322,10 @@
 				{questionNode}
 				{answerNode}
 				{reviewNowHandler}
+				{codeButtonHandler}
+				{undoButtonHandler}
+				{redoButtonHandler}
+				{clozeButtonHandler}
 			/>
 		</div>
 

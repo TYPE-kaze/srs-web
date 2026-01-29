@@ -23,10 +23,10 @@
 </script>
 
 {#await main then res}
-	<div class="mt-2 mb-2 container">
+	<div class="container mt-2 mb-2">
 		<div class="row d-flex align-items-center justify-content-center">
 			<div
-				class="flex-column d-flex align-items-center justify-content-center main col container-fluid bg-opacity-10 border-secondary-subtle bg-body-tertiary rounded pb-3 shadow-sm border border-2"
+				class="flex-column d-flex align-items-center justify-content-center main col container-fluid bg-opacity-10 border-secondary-subtle bg-body-tertiary rounded border border-2 pb-3 shadow-sm"
 			>
 				<div class="row">
 					<div class="col fs-2">
@@ -44,10 +44,10 @@
 			</div>
 		</div>
 		<div class="row mt-3">
-			<div class="p-0 pe-2 col-5">
+			<div class="col-5 p-0 pe-2">
 				<BookPanel />
 			</div>
-			<div class="p-0 col-7">
+			<div class="col-7 p-0">
 				<HeatMapChart {revArr} />
 			</div>
 		</div>

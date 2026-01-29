@@ -6,7 +6,7 @@
 <SimpleHTMLWindow --size-of-content="2.3rem" content={question} isAutoPlay={true} />
 {#if isFlipped}
 	<hr />
-	<SimpleHTMLWindow --size-of-content="2rem" content={answer} isAutoPlay={false} />
+	<SimpleHTMLWindow --size-of-content="2rem" content={answer} isAutoPlay={true} />
 {/if}
 
 <style>

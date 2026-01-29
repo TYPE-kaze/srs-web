@@ -1,8 +1,8 @@
 <script>
 	const { content, isAutoPlay } = $props();
-	function setup(node) {
-		node.scrollIntoView({ behavior: "instant" });
-		/* node.scrollIntoView({ behavior: "smooth" }); */
+	let mainNode;
+	let isFirstTime = true;
+	function setHandlerForThePlayButton(node) {
 		const buttons = node.querySelectorAll("button");
 		for (const button of buttons) {
 			const audio = node.querySelector(`audio[name="${button.getAttribute("for")}"]`);
@@ -14,6 +14,20 @@
 			}
 		}
 	}
+
+	function setup(node) {
+		mainNode = node;
+		node.scrollIntoView({ behavior: "instant" });
+		/* node.scrollIntoView({ behavior: "smooth" }); */
+		setHandlerForThePlayButton(mainNode);
+		isFirstTime = false;
+	}
+
+	$effect(() => {
+		content;
+		if (isFirstTime) return;
+		if (mainNode) setHandlerForThePlayButton(mainNode);
+	});
 </script>
 
 <div {@attach setup}>{@html content}</div>

@@ -28,6 +28,7 @@
 		documentId,
 		bookStates,
 		isSideBar,
+		generateQAFromAI,
 	} = $props();
 	let activeSideBarPage = $state(0);
 	const selectionCapability = useSelectionCapability();
@@ -37,19 +38,21 @@
 	let hasSelection = $state(false);
 	let unsubscribeSelectionChange;
 	let unsubscribeEndSelection;
+	let currentPageNum;
 
 	onMount(() => {
-		const page = getCurrentPage();
+		currentPageNum = getCurrentPage();
 		if (scrollCap) {
 			scrollCap?.provides.onPageChange(({ pageNumber }) => {
 				if (Number.isInteger(pageNumber)) {
+					currentPageNum = pageNumber;
 					setCurrentPage(pageNumber);
 				}
 			});
 
 			scrollCap?.provides.onLayoutReady(({ isInitial }) => {
-				if (Number.isInteger(page)) {
-					scroll.provides.scrollToPage({ pageNumber: page });
+				if (Number.isInteger(currentPageNum)) {
+					scroll.provides.scrollToPage({ pageNumber: currentPageNum });
 				}
 			});
 		}
@@ -110,6 +113,12 @@
 		showModal();
 	}
 
+	function generateQAFromAIHandler() {
+		generateQAFromAI(scroll.state.currentPage, selectedText);
+		selection?.clear();
+		showModal();
+	}
+
 	const annotationCapability = useAnnotationCapability();
 	const annotationApi = $derived(annotationCapability.provides?.forDocument(documentId));
 	const handleDeleteFromMenu = (pageIndex, id) => {
@@ -136,8 +145,17 @@
 								<button
 									type="button"
 									class="context-menu text-dark list-group-item-action list-group-item text-start"
+									onclick={generateQAFromAIHandler}
+								>
+									<i class="bi bi-magic"></i>
+									AI đặt câu hỏi
+								</button>
+								<button
+									type="button"
+									class="context-menu text-dark list-group-item-action list-group-item text-start"
 									onclick={setQuestionTextAndOpenModel}
 								>
+									<i class="bi bi-question-lg"></i>
 									Thêm đè lên Câu Hỏi
 								</button>
 								<button
