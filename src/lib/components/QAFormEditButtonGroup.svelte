@@ -1,5 +1,6 @@
 <script>
 	const {
+		isEditMode,
 		redoButtonHandler,
 		undoButtonHandler,
 		codeButtonHandler,
@@ -56,15 +57,17 @@
 	<button type="button" onclick={clozeButtonHandler} class="btn btn-sm btn-outline-secondary">Cloze</button>
 </div>
 
-<div class="btn-group me-2" role="group">
-	<button
-		type="button"
-		onclick={reviewNowHandler}
-		class={[formStates.reviewNow && "active", "btn btn-sm btn-outline-secondary"]}
-	>
-		Ôn tập luôn
-	</button>
-</div>
+{#if !isEditMode}
+	<div class="btn-group me-2" role="group">
+		<button
+			type="button"
+			onclick={reviewNowHandler}
+			class={[formStates.reviewNow && "active", "btn btn-sm btn-outline-secondary"]}
+		>
+			Ôn tập luôn
+		</button>
+	</div>
+{/if}
 
 <div class="btn-group me-2" role="group">
 	<button

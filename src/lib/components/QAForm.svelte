@@ -328,6 +328,7 @@
 	<form action="">
 		<div class="toolbar mb-2" role="toolbar" aria-label="Toolbar with button groups">
 			<QAFormEditButtonGroup
+				{isEditMode}
 				{boldSelection}
 				{formStates}
 				{italicSelection}
