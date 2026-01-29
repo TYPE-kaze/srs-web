@@ -25,7 +25,7 @@
 	async function main() {
 		const num = 2000;
 		const tests = [];
-		const cardIDs = await ankiConnect("findCards", { query: 'deck:Deck::Learned -"note:Default Image Occlusion"' });
+		const cardIDs = await ankiConnect("findCards", { query: 'deck:Deck::Learned -"note:Default Image Occlusion" -tag:nsfw' });
 
 		const usedIndexs = new Set();
 		const filterdCardIDs = [];
