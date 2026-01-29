@@ -69,8 +69,7 @@
 		audioBlobs = test.audios;
 	}
 
-	async function setupFiles(el) {
-		filesNode = el;
+	function parseAudioOnTestChange() {
 		for (const filename in audioBlobs) {
 			const file = audioBlobs[filename];
 			const dataURL = (audioBlobURLs[filename] = URL.createObjectURL(file));
@@ -81,8 +80,22 @@
 			filesNode.appendChild(audio);
 			formStates.audioNodes[filename] = audio;
 		}
+	}
 
+	let isFirstTime = true;
+	$effect(() => {
+		if (isFirstTime) return;
+		if (test && test.audios) {
+			audioBlobs = test.audios;
+		}
+		parseAudioOnTestChange();
+	});
+
+	async function setupFiles(el) {
+		filesNode = el;
+		parseAudioOnTestChange();
 		promiseForAudioFirstLoadResove();
+		isFirstTime = false;
 
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
